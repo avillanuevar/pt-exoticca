@@ -1,0 +1,26 @@
+
+  .home-carousel {
+    display: flex;
+    z-index: -2;
+  }
+
+  .backpack-img {
+    height: 80px;
+  }
+
+  .home-text h1{
+    font-weight: 900;
+    margin: 0;
+    font-family: sans-serif;
+  }
+
+  .home-text p{
+    margin:0;
+   }
+
+   @media screen and (max-width: 426px) {
+    .home-carousel {
+      display: inherit;
+      text-align: center;
+    }
+  }

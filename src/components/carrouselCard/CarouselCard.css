@@ -1,0 +1,94 @@
+
+.carousel-card {
+  margin-right: 20px;
+  width: 260px;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 2px 5px 5px 0px rgba(0,0,0,0.34);
+  flex-shrink: 0;
+}
+
+.card-top {
+  position: relative;
+}
+
+.card-img {
+  width: 100%;
+  object-fit: contain;
+}
+
+.card-top-content {
+  position: absolute;
+  padding: 10px;
+  top: 0;
+  width: calc( 100% - 20px);
+  height: 245px;
+  overflow-wrap: break-word;
+}
+
+.card-discount {
+  background-color: #2a2a2a;
+  color: #e7cb91;
+  border-radius: 10px;
+  padding: 10px;
+  width: fit-content;
+}
+
+.card-discount p {
+  margin: 0;
+  font-weight: 500;
+}
+
+.card-title-box {
+  position: absolute;
+  bottom: 20px;
+  color: #fff;
+}
+
+.card-title {
+  margin: 0;
+  font-size: x-large;
+  font-weight: 600;
+}
+
+.card-title-days {
+  margin: 0;
+}
+
+.card-bottom {
+  position: relative;
+  padding: 10px;
+  height: 80px;
+}
+
+.card-destinations {
+  margin: 0;
+}
+
+.card-prices {
+  position: absolute;
+  display:flex;
+  bottom: 10px;
+}
+
+.card-prices-text {
+  font-size: smaller;
+  margin: 10px 2px 0;
+}
+
+.card-prices-old {
+  text-decoration: line-through;
+  font-size: larger;
+  font-weight: 700;
+  margin: 5px 2px 0;
+}
+
+.card-prices-new {
+  font-size: x-large;
+  font-weight: 700;
+  margin: 0;
+}
+
+.none{
+  display: none;
+}
