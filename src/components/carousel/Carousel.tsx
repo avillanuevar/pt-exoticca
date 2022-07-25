@@ -53,20 +53,21 @@ function Carousel(props: any) {
     const carouselObj = carouselRef.current;
     const buttonNextObj = nextButtonRef.current;
     const buttonPrevObj = prevButtonRef.current;
-    if (carouselObj && buttonNextObj && buttonPrevObj) {
-      if (
-        carouselObj.scrollWidth > count * 600 + carouselObj.clientWidth
-      ) {
+    if (carouselObj && buttonNextObj && buttonPrevObj ) {
+      //movement management
+      if (carouselObj.scrollWidth > count * 600 + carouselObj.clientWidth) {
         buttonNextObj.style.display = "inline";
         buttonNextObj.disabled = false;
         setNextMovement(count * -600);
-      } else {
+      } else if(count > 0){
         const calcRemainingSpace = (count - 1) * 600 - carouselObj.scrollWidth + carouselObj.clientWidth;
         const lastStep = translateX + calcRemainingSpace;
         buttonNextObj.disabled = true;
         buttonNextObj.style.display = "none";
         setNextMovement(lastStep);
       }
+
+      //toggle buttons
       if (count > 0) {
         buttonPrevObj.style.display = "inline";
         buttonPrevObj.disabled = false;
@@ -74,12 +75,19 @@ function Carousel(props: any) {
         buttonPrevObj.style.display = "none";
         buttonPrevObj.disabled = true
       }
+
+      if(carouselObj.clientWidth >= carouselObj.scrollWidth) {
+        buttonNextObj.disabled = true;
+        buttonNextObj.style.display = "none";
+      }
     }
   }, [count]);
 
   
   useEffect(() => {
     if (carouselRef.current) {
+      console.log(nextMovement);
+      
       setTranslateX(nextMovement);
       carouselRef.current.style.transform = `translate3d(${translateX}px, 0, 0)`;
     }
