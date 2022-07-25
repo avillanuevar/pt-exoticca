@@ -9,7 +9,7 @@ interface Card {
   images: {
     desktop: string;
     tablet: string;
-    mobil: string;
+    mobile: string;
   }[];
   days: number;
   priceDetail: {
@@ -33,7 +33,7 @@ function CarrouselCard({
 }: Card) {
 
   return (
-    <div className="carousel-card" id={id}>
+    <div className="carousel-card" id={id} role='card'>
       <div className="card-top">
         <img className="card-img" src={images[0].desktop} alt={title} />
         <div className="card-top-content">

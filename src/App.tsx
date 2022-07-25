@@ -7,7 +7,7 @@ import './App.css';
 function App() {
   const queryClient = new QueryClient();
   return (
-    <div className="App">
+    <div className="App" role='app'>
       <QueryClientProvider client={queryClient}>
         <HomeCarousel/>
       </QueryClientProvider>

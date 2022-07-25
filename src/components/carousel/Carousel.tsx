@@ -4,6 +4,7 @@ import {
   useRef,
 } from "react";
 import CarrouselCard from "../carrouselCard/CarouselCard";
+import UseWindowResize from '../../hooks/useWindowResize'
 
 import "./Carousel.css";
 
@@ -14,7 +15,7 @@ interface Card {
   images: {
     desktop: string;
     tablet: string;
-    mobil: string;
+    mobile: string;
   }[];
   days: number;
   priceDetail: {
@@ -31,15 +32,16 @@ function Carousel(props: any) {
   const [count, setCount] = useState(0);
   const [translateX, setTranslateX] = useState(0);
   const [nextMovement, setNextMovement] = useState(0);
-  const isDevice = window.innerWidth < 800;
-
+  const isDevice = UseWindowResize() < 800;
+  
   const actionHandler = (mode: string) => {
+
     if (carouselRef.current && nextButtonRef.current) {
       if (mode === "next") {
         setCount((lastStep) => ++lastStep);
 
       } else if (mode === "prev") {
-        count ! == 0 && setCount((lastStep) => --lastStep);
+        count !== 0 && setCount((lastStep) => --lastStep);
       }
     }
   };
@@ -87,8 +89,6 @@ function Carousel(props: any) {
   
   useEffect(() => {
     if (carouselRef.current) {
-      console.log(nextMovement);
-      
       setTranslateX(nextMovement);
       carouselRef.current.style.transform = `translate3d(${translateX}px, 0, 0)`;
     }
@@ -101,7 +101,7 @@ function Carousel(props: any) {
           <button
             ref={prevButtonRef}
             onClick={() => actionHandler("prev")}
-            className="btn btn-left"
+            className={`btn btn-left ${count === 0 && 'none'}`}
           >
             {"<"}
           </button>
@@ -118,7 +118,7 @@ function Carousel(props: any) {
   }
 
   return (
-    <div className="carousel-box">
+    <div className="carousel-box" role='carousel'>
       <h2>{props.trips.name ? props.trips.name : props.trips.title}</h2>
       <ul className="carousel" ref={carouselRef}>
         {props.trips.cards &&
@@ -133,6 +133,8 @@ function Carousel(props: any) {
       }  
     </div>
   );
+
+  
 }
 
 export default Carousel;
