@@ -31,6 +31,7 @@ function Carousel(props: any) {
   const [count, setCount] = useState(0);
   const [translateX, setTranslateX] = useState(0);
   const [nextMovement, setNextMovement] = useState(0);
+  const isDevice = window.innerWidth < 800;
 
   const actionHandler = (mode: string) => {
     if (carouselRef.current && nextButtonRef.current) {
@@ -38,7 +39,7 @@ function Carousel(props: any) {
         setCount((lastStep) => ++lastStep);
 
       } else if (mode === "prev") {
-        setCount((lastStep) => --lastStep);
+        count ! == 0 && setCount((lastStep) => --lastStep);
       }
     }
   };
@@ -93,6 +94,29 @@ function Carousel(props: any) {
     }
   }, [nextMovement, translateX]);
 
+  const displayButtons = () => {
+    if(!isDevice) {
+      return (
+        <>
+          <button
+            ref={prevButtonRef}
+            onClick={() => actionHandler("prev")}
+            className="btn btn-left"
+          >
+            {"<"}
+          </button>
+          <button
+            ref={nextButtonRef}
+            onClick={() => actionHandler("next")}
+            className="btn btn-right"
+          >
+            {">"}
+          </button>
+        </>
+      )
+    }
+  }
+
   return (
     <div className="carousel-box">
       <h2>{props.trips.name ? props.trips.name : props.trips.title}</h2>
@@ -104,20 +128,9 @@ function Carousel(props: any) {
             </li>
           ))}
       </ul>
-      <button
-        ref={prevButtonRef}
-        onClick={() => actionHandler("prev")}
-        className="btn btn-left"
-      >
-        {"<"}
-      </button>
-      <button
-        ref={nextButtonRef}
-        onClick={() => actionHandler("next")}
-        className="btn btn-right"
-      >
-        {">"}
-      </button>
+      {
+        displayButtons()
+      }  
     </div>
   );
 }
