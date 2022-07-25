@@ -1,33 +1,44 @@
-import React from 'react'
+import React from "react";
 
-import "./CarouselCard.css"
+import "./CarouselCard.css";
 
-interface Card { 
-  title: string; 
-  destination: string; 
-  id: string; 
+interface Card {
+  title: string;
+  destination: string;
+  id: string;
   images: {
     desktop: string;
     tablet: string;
     mobil: string;
   }[];
-  days: number; 
+  days: number;
   priceDetail: {
     pricingPercentage: number;
-    oldPriceBeautify: string; 
+    oldPriceBeautify: string;
     fromPriceBeautify: string;
-  }; 
+  };
 }
 
-function CarrouselCard({ title, destination, id, images, days, priceDetail }: Card) {
-  const { pricingPercentage, oldPriceBeautify, fromPriceBeautify } = { ...priceDetail }
+function CarrouselCard({
+  title,
+  destination,
+  id,
+  images,
+  days,
+  priceDetail : {
+    pricingPercentage,
+    oldPriceBeautify,
+    fromPriceBeautify
+  },
+}: Card) {
+
   return (
     <div className="carousel-card" id={id}>
       <div className="card-top">
         <img className="card-img" src={images[0].desktop} alt={title} />
         <div className="card-top-content">
-          <div className={pricingPercentage !== 0 ?"card-discount" :"none"}>
-            <p>-{ pricingPercentage }%</p>
+          <div className={pricingPercentage !== 0 ? "card-discount" : "none"}>
+            <p>-{pricingPercentage}%</p>
           </div>
           <div className="card-title-box">
             <p className="card-title">{title}</p>
@@ -44,7 +55,7 @@ function CarrouselCard({ title, destination, id, images, days, priceDetail }: Ca
         </div>
       </div>
     </div>
-  )
+  );
 }
 
-export default CarrouselCard
+export default CarrouselCard;

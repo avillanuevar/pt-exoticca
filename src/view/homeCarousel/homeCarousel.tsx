@@ -21,7 +21,7 @@ function HomeCarousel() {
     }
   },[data])
     
-  if (isLoading || !trips.length) {
+  if (isLoading) {
       return <p>Loading...</p>
   }
   if (error) {

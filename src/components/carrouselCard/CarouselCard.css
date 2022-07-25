@@ -10,6 +10,8 @@
 
 .card-top {
   position: relative;
+  height: 265px;
+  overflow: hidden;
 }
 
 .card-img {

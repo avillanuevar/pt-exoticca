@@ -3,22 +3,20 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { fetchTripsUK, fetchTripsES } from "../../services/FetchTrips";
 import "./Filter.css";
 
-
 const Filter = () => {
-  const [code, setCode] = useState('es');
+  const [code, setCode] = useState("es");
   const [filterOpen, setFilterOpen] = useState(false);
   const arrowRef = useRef<HTMLParagraphElement>(null);
   const filterRef = useRef<HTMLDivElement>(null);
-  const styleArrow = {
-    transform: filterOpen ? "rotate(180deg)" : "rotate(180deg)",
-    transition: "transform 150ms ease", // smooth transition
-  };
   const queryClient = useQueryClient();
-  const { isLoading, mutate } = useMutation(code === 'es' ? fetchTripsES : fetchTripsUK, {
+
+  // Function in charge of updating the list of trips depending on the server
+  const { mutate } = useMutation(code === "es" ? fetchTripsES : fetchTripsUK, {
     onSuccess: (data) => {
-      queryClient.setQueryData(['trips'],data);
-    }
+      queryClient.setQueryData(["trips"], data);
+    },
   });
+
   const toggleFilter = () => {
     setFilterOpen((prev) => !prev);
   };
@@ -29,8 +27,9 @@ const Filter = () => {
 
   useEffect(() => {
     mutate();
-  },[code])
+  }, [code]);
 
+  //This hook is used to set the animations of openig and closing the filter
   useEffect(() => {
     if (arrowRef.current && filterRef.current) {
       const direction = filterOpen ? "90" : "-90";
@@ -39,6 +38,7 @@ const Filter = () => {
       filterRef.current.style.transform = `translateY(${expand}px)`;
     }
   }, [filterOpen]);
+  
   return (
     <div className="filter-box">
       <div className="filter-title">
@@ -53,14 +53,18 @@ const Filter = () => {
         <p className="filter-text">Market selection</p>
         <div className="filter-button-cluster">
           <button
-            className="filter-option-button"
+            className={`filter-option-button ${
+              code === "es" && "filter-selected"
+            }`}
             onClick={marketChange}
             id="es"
           >
             Es
           </button>
           <button
-            className="filter-option-button"
+            className={`filter-option-button ${
+              code === "uk" && "filter-selected"
+            }`}
             onClick={marketChange}
             id="uk"
           >

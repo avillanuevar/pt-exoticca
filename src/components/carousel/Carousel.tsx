@@ -1,104 +1,117 @@
-import { useState, useEffect, useLayoutEffect, useRef, useMemo, RefObject} from 'react';
-import CarrouselCard from '../carrouselCard/CarouselCard';
+import {
+  useState,
+  useEffect,
+  useRef,
+} from "react";
+import CarrouselCard from "../carrouselCard/CarouselCard";
 
+import "./Carousel.css";
 
-import './Carousel.css'
-
-interface Card { 
-  title: string; 
-  destination: string; 
-  id: string; 
+interface Card {
+  title: string;
+  destination: string;
+  id: string;
   images: {
     desktop: string;
     tablet: string;
     mobil: string;
   }[];
-  days: number; 
+  days: number;
   priceDetail: {
     pricingPercentage: number;
-    oldPriceBeautify: string; 
+    oldPriceBeautify: string;
     fromPriceBeautify: string;
-  }; 
-};
+  };
+}
 
-
-function Carousel( props: any ) {
-  const containerRef = useRef<HTMLUListElement>(null);
-  const endLineRef = useRef<HTMLLIElement>(null);
-  const startLineRef = useRef<HTMLLIElement>(null);
+function Carousel(props: any) {
+  const carouselRef = useRef<HTMLUListElement>(null);
+  const nextButtonRef = useRef<HTMLButtonElement>(null);
+  const prevButtonRef = useRef<HTMLButtonElement>(null);
   const [count, setCount] = useState(0);
   const [translateX, setTranslateX] = useState(0);
+  const [nextMovement, setNextMovement] = useState(0);
 
-  const btnNext = useIsInViewport(endLineRef);
-  const btnPrev = useIsInViewport(startLineRef);  
-
-  useLayoutEffect(() => {
-    setTranslateX(300);
-  }, []);
-  
   const actionHandler = (mode: string) => {
-    if (containerRef.current) {
-      containerRef.current.style.transitionDuration = "400ms";
+    if (carouselRef.current && nextButtonRef.current) {
       if (mode === "next") {
-        !btnNext && setCount((lastStep) => --lastStep);
+        setCount((lastStep) => ++lastStep);
+
       } else if (mode === "prev") {
-        !btnPrev && setCount((lastStep) => ++lastStep);
+        setCount((lastStep) => --lastStep);
       }
     }
   };
-
-    function useIsInViewport(ref: RefObject<HTMLLIElement>) {
-      const [isIntersecting, setIsIntersecting] = useState(false);
-      
-      const observer = useMemo(
-        () =>
-          new IntersectionObserver(([entry]) =>
-            setIsIntersecting(entry.isIntersecting),
-          ),
-        [],
-      );
-
-      useEffect(() => {
-        ref.current && observer.observe(ref.current);
-        return () => {
-          observer.disconnect();
-        };
-      }, [ref, observer]);
-
-      return isIntersecting;
-    }
-
+  
+  /**
+   * UseEfect hook that activates when the count is changed,
+   * in charge of managin the distance the carousel will move
+   * when the the next or prev buttons are clic, and controles 
+   * the display of the buttons
+   */
   useEffect(() => {
-    setTranslateX( count * 300);
-    if(containerRef.current) { 
-    containerRef.current.style.transform = `translate3d(${translateX}px, 0, 0)`;
-    }   
-  }, [count,translateX]);
+    const carouselObj = carouselRef.current;
+    const buttonNextObj = nextButtonRef.current;
+    const buttonPrevObj = prevButtonRef.current;
+    if (carouselObj && buttonNextObj && buttonPrevObj) {
+      if (
+        carouselObj.scrollWidth > count * 600 + carouselObj.clientWidth
+      ) {
+        buttonNextObj.style.display = "inline";
+        buttonNextObj.disabled = false;
+        setNextMovement(count * -600);
+      } else {
+        const calcRemainingSpace = (count - 1) * 600 - carouselObj.scrollWidth + carouselObj.clientWidth;
+        const lastStep = translateX + calcRemainingSpace;
+        buttonNextObj.disabled = true;
+        buttonNextObj.style.display = "none";
+        setNextMovement(lastStep);
+      }
+      if (count > 0) {
+        buttonPrevObj.style.display = "inline";
+        buttonPrevObj.disabled = false;
+      } else {
+        buttonPrevObj.style.display = "none";
+        buttonPrevObj.disabled = true
+      }
+    }
+  }, [count]);
+
+  
+  useEffect(() => {
+    if (carouselRef.current) {
+      setTranslateX(nextMovement);
+      carouselRef.current.style.transform = `translate3d(${translateX}px, 0, 0)`;
+    }
+  }, [nextMovement, translateX]);
 
   return (
-    <div className='carousel-box'>
-      <h2>{props.trips.name ? props.trips.name : props.trips.title }</h2>
-      <ul className='carousel' ref={containerRef}>
-        <li ref={startLineRef}></li>
-        {
-          props.trips.cards && props.trips.cards.map((trip: Card)=> <li key={trip.id}><CarrouselCard  { ...trip }/></li>)
-        }
-        <li ref={endLineRef}></li>
+    <div className="carousel-box">
+      <h2>{props.trips.name ? props.trips.name : props.trips.title}</h2>
+      <ul className="carousel" ref={carouselRef}>
+        {props.trips.cards &&
+          props.trips.cards.map((trip: Card) => (
+            <li key={trip.id}>
+              <CarrouselCard {...trip} />
+            </li>
+          ))}
       </ul>
       <button
+        ref={prevButtonRef}
         onClick={() => actionHandler("prev")}
-        className={btnPrev || count >= 0 ? "none" : "btn btn-left"}
+        className="btn btn-left"
       >
         {"<"}
       </button>
       <button
+        ref={nextButtonRef}
         onClick={() => actionHandler("next")}
-        className={btnNext || count <= -6 ? "none" : "btn btn-right"}
+        className="btn btn-right"
       >
         {">"}
       </button>
     </div>
-  )
+  );
 }
 
-export default Carousel
+export default Carousel;
